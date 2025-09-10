@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.API.Data;
 
@@ -10,9 +11,11 @@ using TaskManager.API.Data;
 namespace TaskManager.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910210140_AddCategory")]
+    partial class AddCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
@@ -29,7 +32,7 @@ namespace TaskManager.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -79,7 +82,7 @@ namespace TaskManager.API.Migrations
                             Id = 1,
                             CategoryId = 1,
                             Description = "Practice C# basics",
-                            DueDate = new DateTime(2025, 9, 14, 0, 11, 7, 626, DateTimeKind.Local).AddTicks(8130),
+                            DueDate = new DateTime(2025, 9, 14, 0, 1, 40, 187, DateTimeKind.Local).AddTicks(2760),
                             IsCompleted = false,
                             Title = "Learn C#"
                         },
@@ -88,7 +91,7 @@ namespace TaskManager.API.Migrations
                             Id = 2,
                             CategoryId = 2,
                             Description = "Create first Web API",
-                            DueDate = new DateTime(2025, 9, 16, 0, 11, 7, 626, DateTimeKind.Local).AddTicks(8170),
+                            DueDate = new DateTime(2025, 9, 16, 0, 1, 40, 187, DateTimeKind.Local).AddTicks(2830),
                             IsCompleted = false,
                             Title = "Build API"
                         });

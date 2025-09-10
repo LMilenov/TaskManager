@@ -8,10 +8,17 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<TaskItem> Tasks => Set<TaskItem>();
+
+    public DbSet<Category> Categories => Set<Category>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Category>().HasData(
+            new Category { Id = 1, Name = "Learning" },
+            new Category { Id = 2, Name = "Projects" }
+        );
 
         modelBuilder.Entity<TaskItem>().HasData(
             new TaskItem
@@ -20,7 +27,8 @@ public class AppDbContext : DbContext
                 Title = "Learn C#",
                 Description = "Practice C# basics",
                 DueDate = DateTime.Now.AddDays(3),
-                IsCompleted = false
+                IsCompleted = false,
+                CategoryId = 1
             },
             new TaskItem
             {
@@ -28,7 +36,8 @@ public class AppDbContext : DbContext
                 Title = "Build API",
                 Description = "Create first Web API",
                 DueDate = DateTime.Now.AddDays(5),
-                IsCompleted = false
+                IsCompleted = false,
+                CategoryId = 2
             }
         );
     }
