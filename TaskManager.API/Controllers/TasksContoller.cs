@@ -8,7 +8,7 @@ namespace TaskManager.API.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tasks")]
 public class TaskController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -18,30 +18,24 @@ public class TaskController : ControllerBase
         _context = context;
     }
 
-    private static List<TaskItem> tasks = new()
-    {
-        new TaskItem { Id = 1, Title = "Learn C#", Description = "Practise C# basics", DueDate = DateTime.Now.AddDays(3), IsCompleted = false},
-        new TaskItem { Id = 2, Title = "Build API", Description = "Create first Web API", DueDate = DateTime.Now.AddDays(5), IsCompleted = false}
-    };
-
     // GET api/tasks
     [HttpGet]
     public ActionResult<IEnumerable<TaskItem>> GetTasks()
     {
-        return Ok(tasks);
+        return Ok(_context.Tasks.ToList());
     }
 
     // Post api/tasks
     [HttpPost]
     public ActionResult<TaskItem> AddTask(TaskItem task)
     {
-        task.Id = tasks.Count + 1;
-        tasks.Add(task);
+        _context.Tasks.Add(task);
+        _context.SaveChanges();
         return Ok(task);
     }
 
     // PUT api/tasks/{id}
-    [HttpPut("id")]
+    [HttpPut("{id}")]
     public IActionResult UpdateTask(int id, TaskItem updatedTask)
     {
         var task = _context.Tasks.Find(id);
