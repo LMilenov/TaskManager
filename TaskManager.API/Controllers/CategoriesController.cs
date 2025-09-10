@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.API.Models;
 using TaskManager.API.Data;
+using TaskManager.API.DTOs;
 
 namespace TaskManager.API.Controllers;
 
@@ -22,8 +23,9 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Category> AddCategory(Category category)
+    public ActionResult<Category> AddCategory(CategoryCreateDto dto)
     {
+        var category = new Category { Name = dto.Name };
         _context.Categories.Add(category);
         _context.SaveChanges();
         return Ok(category);

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.API.Data;
+using TaskManager.API.DTOs;
 using TaskManager.API.Models;
 
 namespace TaskManager.API.Controllers;
@@ -27,8 +28,16 @@ public class TaskController : ControllerBase
 
     // Post api/tasks
     [HttpPost]
-    public ActionResult<TaskItem> AddTask(TaskItem task)
+    public ActionResult<TaskItem> AddTask(TaskCreateDto dto)
     {
+        var task = new TaskItem
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            DueDate = dto.DueDate,
+            IsCompleted = dto.IsCompleted,
+            CategoryId = dto.CategoryId
+        };
         _context.Tasks.Add(task);
         _context.SaveChanges();
         return Ok(task);
