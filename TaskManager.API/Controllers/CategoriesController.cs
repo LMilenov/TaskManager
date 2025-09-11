@@ -17,9 +17,17 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Category>> GetCategories()
+    public ActionResult<IEnumerable<CategoryReadDto>> GetCategories()
     {
-        return Ok(_context.Categories.ToList());
+        var categories = _context.Categories.Select(c => new CategoryReadDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            TaskCount = c.Tasks.Count,
+        })
+        .ToList();
+
+        return Ok(categories);
     }
 
     [HttpPost]
@@ -28,6 +36,11 @@ public class CategoriesController : ControllerBase
         var category = new Category { Name = dto.Name };
         _context.Categories.Add(category);
         _context.SaveChanges();
-        return Ok(category);
+        return Ok(new CategoryReadDto
+        {
+            Id = category.Id,
+            Name = category.Name,
+            TaskCount = 0
+        });
     }
 }
