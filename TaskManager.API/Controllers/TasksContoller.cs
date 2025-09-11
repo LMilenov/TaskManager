@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TaskManager.API.Data;
 using TaskManager.API.DTOs;
 using TaskManager.API.Models;
@@ -21,9 +22,20 @@ public class TaskController : ControllerBase
 
     // GET api/tasks
     [HttpGet]
-    public ActionResult<IEnumerable<TaskItem>> GetTasks()
+    public ActionResult<IEnumerable<TaskReadDto>> GetTasks()
     {
-        return Ok(_context.Tasks.ToList());
+        var tasks = _context.Tasks.Include(t => t.Category).Select(t => new TaskReadDto
+        {
+            Id = t.Id,
+            Title = t.Title,
+            Description = t.Description,
+            DueDate = t.DueDate,
+            IsCompleted = t.IsCompleted,
+            CategoryName = t.Category != null ? t.Category.Name : "",
+        })
+        .ToList();
+
+        return Ok(tasks);
     }
 
     // Post api/tasks
