@@ -43,4 +43,39 @@ public class CategoriesController : ControllerBase
             TaskCount = 0
         });
     }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateCategory(int id, CategoryCreateDto dto)
+    {
+        var category = _context.Categories.Find(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
+
+        category.Name = dto.Name;
+        _context.SaveChanges();
+
+        return Ok(new CategoryReadDto
+        {
+            Id = category.Id,
+            Name = category.Name,
+            TaskCount = category.Tasks.Count
+        });
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteCategory(int id)
+    {
+        var category = _context.Categories.Find(id);
+        if (category == null)
+        {
+            return NotFound();
+        }
+
+        _context.Categories.Remove(category);
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 }
