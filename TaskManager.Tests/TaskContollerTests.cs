@@ -50,4 +50,29 @@ public class TaskContollerTests
         Assert.Equal("Updated Description", modified!.Description);
         Assert.True(modified.IsCompleted);
     }
+
+    [Fact]
+    public void DeleteTask_ShouldRemoveTask_WhenExists()
+    {
+        var context = GetInMemoryDbContext();
+        var controller = new TaskController(context);
+
+        var dto = new TaskCreateDto
+        {
+            Title = "Task to delete",
+            Description = "Will be removed",
+            DueDate = DateTime.Now.AddDays(1),
+            IsCompleted = false,
+            CategoryId = 1
+        };
+
+        controller.AddTask(dto);
+        var task = context.Tasks.First();
+
+        controller.DeleteTask(task.Id);
+
+        var deleted = context.Tasks.Find(task.Id);
+        Assert.Null(deleted);
+        Assert.Empty(context.Tasks.ToList());
+    }
 }
