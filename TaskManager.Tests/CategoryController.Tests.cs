@@ -46,4 +46,15 @@ public class CategoriesControllerTests
 
         Assert.Empty(context.Categories.ToList());
     }
+
+    [Fact]
+    public void DeleteCategory_ReturnsNotFound_WhenCategoryDoesNotExist()
+    {
+        var context = GetInMemoryDbContext();
+        var controller = new CategoriesController(context);
+
+        var result = controller.DeleteCategory(999);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
 }
