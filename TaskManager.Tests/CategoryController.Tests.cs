@@ -57,4 +57,16 @@ public class CategoriesControllerTests
 
         Assert.IsType<NotFoundResult>(result);
     }
+
+    [Fact]
+    public void UpdateCategory_ReturnsNotFound_WhenCategoryDoesNotExist()
+    {
+        var context = GetInMemoryDbContext();
+        var controller = new CategoriesController(context);
+        var dto = new CategoryCreateDto { Name = "NonExistent" };
+
+        var result = controller.UpdateCategory(9999, dto);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
 }
