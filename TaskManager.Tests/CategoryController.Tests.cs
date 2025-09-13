@@ -69,4 +69,20 @@ public class CategoriesControllerTests
 
         Assert.IsType<NotFoundResult>(result);
     }
+
+    [Fact]
+    public void AddCategory_ReturnsBadRequest_WhenNameIsEmpty()
+    {
+        var context = GetInMemoryDbContext();
+        var controller = new CategoriesController(context);
+
+        var dto = new CategoryCreateDto { Name = "" };
+
+        var result = controller.AddCategory(dto);
+
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Contains("Name", badRequestResult.Value!.ToString());
+
+
+    }
 }
