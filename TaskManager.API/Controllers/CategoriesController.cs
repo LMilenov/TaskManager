@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManager.API.Models;
 using TaskManager.API.Data;
 using TaskManager.API.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManager.API.Controllers;
 
 [ApiController]
 [Route("api/categories")]
+[Authorize]
 public class CategoriesController : ControllerBase
 {
     private readonly AppDbContext _context;
