@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.API.Data;
 
@@ -10,9 +11,11 @@ using TaskManager.API.Data;
 namespace TaskManager.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250914070214_AddUserRelations1")]
+    partial class AddUserRelations1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
@@ -91,7 +94,7 @@ namespace TaskManager.API.Migrations
                             Id = 1,
                             CategoryId = 1,
                             Description = "Practice C# basics",
-                            DueDate = new DateTime(2025, 9, 18, 10, 25, 57, 816, DateTimeKind.Local).AddTicks(4090),
+                            DueDate = new DateTime(2025, 9, 17, 10, 2, 14, 396, DateTimeKind.Local).AddTicks(9780),
                             IsCompleted = false,
                             Title = "Learn C#",
                             UserId = 0
@@ -101,7 +104,7 @@ namespace TaskManager.API.Migrations
                             Id = 2,
                             CategoryId = 2,
                             Description = "Create first Web API",
-                            DueDate = new DateTime(2025, 9, 20, 10, 25, 57, 816, DateTimeKind.Local).AddTicks(4150),
+                            DueDate = new DateTime(2025, 9, 19, 10, 2, 14, 396, DateTimeKind.Local).AddTicks(9810),
                             IsCompleted = false,
                             Title = "Build API",
                             UserId = 0

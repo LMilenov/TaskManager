@@ -7,5 +7,6 @@ public class User
     public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
     public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
 
-    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public List<TaskItem> Tasks { get; set; } = new();
+    public List<Category> Categories { get; set; } = new();
 }
