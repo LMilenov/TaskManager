@@ -1,46 +1,52 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager.API.Models;
 
-namespace TaskManager.API.Data;
-
-public class AppDbContext : DbContext
+namespace TaskManager.API.Data
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-    public DbSet<TaskItem> Tasks => Set<TaskItem>();
-
-    public DbSet<Category> Categories => Set<Category>();
-
-    public DbSet<User> Users { get; set; }
-    
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class AppDbContext : DbContext
     {
-        base.OnModelCreating(modelBuilder);
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
-        modelBuilder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Learning" },
-            new Category { Id = 2, Name = "Projects" }
-        );
+        public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
 
-        modelBuilder.Entity<TaskItem>().HasData(
-            new TaskItem
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //All DateTime -> timestamp without time zone
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                Id = 1,
-                Title = "Learn C#",
-                Description = "Practice C# basics",
-                DueDate = DateTime.Now.AddDays(3),
-                IsCompleted = false,
-                CategoryId = 1
-            },
-            new TaskItem
-            {
-                Id = 2,
-                Title = "Build API",
-                Description = "Create first Web API",
-                DueDate = DateTime.Now.AddDays(5),
-                IsCompleted = false,
-                CategoryId = 2
+                foreach (var property in entityType.GetProperties()
+                             .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?)))
+                {
+                    property.SetColumnType("timestamp without time zone");
+                }
             }
-        );
+
+            // User -> Category (1:N)
+            modelBuilder.Entity<Category>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Categories)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // User -> TaskItem (1:N)
+            modelBuilder.Entity<TaskItem>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.Tasks)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Category -> TaskItem (1:N)
+            modelBuilder.Entity<TaskItem>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Tasks)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
