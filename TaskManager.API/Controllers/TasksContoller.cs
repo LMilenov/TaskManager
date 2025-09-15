@@ -36,7 +36,7 @@ public class TaskController : ControllerBase
         if (userId is null) return Unauthorized("User ID not found in token");
 
         var tasks = _context.Tasks
-            .Where(t => t.UserId == userId) // 👈 филтър по user
+            .Where(t => t.UserId == userId)
             .Include(t => t.Category)
             .Select(t => new TaskReadDto
             {
@@ -54,7 +54,7 @@ public class TaskController : ControllerBase
 
     // POST api/tasks
     [HttpPost]
-    public ActionResult<TaskItem> AddTask(TaskCreateDto dto)
+    public ActionResult<TaskReadDto> AddTask(TaskCreateDto dto)
     {
         var userId = GetUserId();
         if (userId is null) return Unauthorized("User ID not found in token");
@@ -82,7 +82,7 @@ public class TaskController : ControllerBase
             Description = task.Description,
             DueDate = task.DueDate,
             IsCompleted = task.IsCompleted,
-            CategoryName = task.Category?.Name
+            CategoryName = category.Name
         };
 
         return Ok(result);
@@ -96,15 +96,16 @@ public class TaskController : ControllerBase
         if (userId is null) return Unauthorized("User ID not found in token");
 
         var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.UserId == userId);
-        if (task == null)
-        {
-            return NotFound();
-        }
+        if (task == null) return NotFound();
+
+        var category = _context.Categories.FirstOrDefault(c => c.Id == dto.CategoryId && c.UserId == userId);
+        if (category == null) return BadRequest("Invalid category for current user");
 
         task.Title = dto.Title;
         task.Description = dto.Description;
         task.DueDate = dto.DueDate;
         task.IsCompleted = dto.IsCompleted;
+        task.CategoryId = dto.CategoryId;
 
         _context.SaveChanges();
 
@@ -115,7 +116,7 @@ public class TaskController : ControllerBase
             Description = task.Description,
             DueDate = task.DueDate,
             IsCompleted = task.IsCompleted,
-            CategoryName = task.Category?.Name ?? ""
+            CategoryName = category.Name
         };
 
         return Ok(result);
@@ -125,12 +126,11 @@ public class TaskController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteTask(int id)
     {
+        var userId = GetUserId();
+        if (userId is null) return Unauthorized();
 
-        var task = _context.Tasks.Find(id);
-        if (task == null)
-        {
-            return NotFound();
-        }
+        var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.UserId == userId);
+        if (task == null) return NotFound();
 
         _context.Tasks.Remove(task);
         _context.SaveChanges();

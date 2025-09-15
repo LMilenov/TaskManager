@@ -61,7 +61,7 @@ public class CategoriesController : ControllerBase
             Name = category.Name,
             TaskCount = 0
         };
-
+        
         return Ok(result);
     }
 
