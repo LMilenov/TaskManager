@@ -33,9 +33,8 @@ public class TaskContollerTests
         controller.AddTask(dto);
         var task = context.Tasks.First();
 
-        var updated = new TaskItem
+        var updated = new TaskCreateDto
         {
-            Id = task.Id,
             Title = "Updated Title",
             Description = "Updated Description",
             DueDate = DateTime.Now.AddDays(2),
