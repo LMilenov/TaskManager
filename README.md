@@ -125,4 +125,4 @@ This project is for educational purposes.
 You can use it freely as a portfolio project.
 
 🗂️ Database Schema
-![ER Diagram](docs/taskmanager_er_diagram.png)
+![ER Diagram](https://raw.githubusercontent.com/LMilenov/TaskManager/main/docs/taskmanager_er_diagram.png)
