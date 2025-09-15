@@ -70,6 +70,47 @@ GET /api/tasks
 
 POST /api/tasks
 
+🖥️ Example Usage with cURL
+1. Register a new user
+curl -X POST http://localhost:5033/api/auth/register \
+-H "Content-Type: application/json" \
+-d '{
+  "username": "testuser",
+  "password": "TestPassword123"
+}'
+
+2. Login and get JWT
+curl -X POST http://localhost:5033/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+  "username": "testuser",
+  "password": "TestPassword123"
+}'
+
+3. Create a new category (replace <token> with your JWT)
+curl -X POST http://localhost:5033/api/categories \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <token>" \
+-d '{
+  "name": "Work"
+}'
+
+4. Create a new task (replace <token> with your JWT)
+curl -X POST http://localhost:5033/api/tasks \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <token>" \
+-d '{
+  "title": "Finish project",
+  "description": "Complete the TaskManager API",
+  "dueDate": "2030-01-01T00:00:00Z",
+  "isCompleted": false,
+  "categoryId": 1
+}'
+
+5. List all tasks
+curl -X GET http://localhost:5033/api/tasks \
+-H "Authorization: Bearer <token>"
+
 🧪 Testing
 
 The project includes xUnit tests for controllers and database logic using InMemoryDb.
